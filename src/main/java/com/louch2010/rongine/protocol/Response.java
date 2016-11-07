@@ -7,9 +7,18 @@ public class Response implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private String requestId;
 	private String code;
 	private Throwable exception;
 	private Object returnValue;
+
+	public String getRequestId() {
+		return requestId;
+	}
+
+	public void setRequestId(String requestId) {
+		this.requestId = requestId;
+	}
 
 	public String getCode() {
 		return code;
@@ -37,7 +46,9 @@ public class Response implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Response [code=" + code + ", exception=" + exception
-				+ ", returnValue=" + returnValue + "]";
+		return "Response [requestId=" + requestId + ", code=" + code
+				+ ", exception=" + exception + ", returnValue=" + returnValue
+				+ "]";
 	}
+
 }

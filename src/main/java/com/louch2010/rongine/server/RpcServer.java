@@ -43,10 +43,11 @@ public class RpcServer {
 				//处理请求
 				if(bean == null){
 					response = new Response();
+					response.setRequestId(request.getId());
 					response.setCode(Constant.INVOKE_CODE.NO_METHOD);
-					response.setException(new RuntimeException("no method regist for" + request.getUri()));
+					response.setException(new RuntimeException("no method regist for " + request.getUri()));
 				}else{
-					response = ServerInvoker.invoke(bean.getObj(), bean.getMethod(), request.getParams());
+					response = ServerInvoker.invoke(bean.getObj(), bean.getMethod(), request.getParams(), request.getId());
 				}
 				//响应请求
 				ObjectOutputStream oos = new ObjectOutputStream(output);

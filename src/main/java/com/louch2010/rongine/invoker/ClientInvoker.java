@@ -4,21 +4,22 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.net.Socket;
+import java.util.UUID;
 
 import com.louch2010.rongine.constants.Constant;
 import com.louch2010.rongine.protocol.Request;
 import com.louch2010.rongine.protocol.Response;
-import com.louch2010.rongine.util.MethodUtil;
 
 public class ClientInvoker {
-	public static Object invoke(Class<?> clazz, Method method, Object[] params){
+	
+	public static Object invoke(Class<?> clazz, String methodSign, Object[] params) throws Exception{
 		//封装请求对象
-		String uri = clazz.getName() + "#" + MethodUtil.getMethodSign(method);
+		String uri = clazz.getName() + "." + methodSign;
 		Request request = new Request();
 		request.setParams(params);
 		request.setUri(uri);
+		request.setId(UUID.randomUUID().toString());
 		//发送请求
 		Response response = null;
 		try {
@@ -33,6 +34,7 @@ public class ClientInvoker {
 			socket.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
 		}
 		if(response != null){
 			System.out.println(response.toString());
@@ -40,7 +42,7 @@ public class ClientInvoker {
 				return response.getReturnValue();
 			}
 			if(response.getException() != null){
-				throw new RuntimeException(response.getException());
+				throw new Exception(response.getException());
 			}
 		}
 		return null;
