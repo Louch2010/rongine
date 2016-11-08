@@ -1,69 +1,63 @@
 package com.louch2010.rongine.server;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import com.louch2010.rongine.constants.Constant;
-import com.louch2010.rongine.invoker.ServerInvoker;
-import com.louch2010.rongine.protocol.ProtocolDispatcher;
-import com.louch2010.rongine.protocol.Request;
-import com.louch2010.rongine.protocol.Response;
-import com.louch2010.rongine.register.RegisterBean;
 import com.louch2010.rongine.register.ServerRegisterCenter;
 
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
+
+
 public class RpcServer {
+	private Log log = LogFactory.getLog(RpcServer.class);
 	private ServerRegisterCenter register;
 	
 	public RpcServer(int port, ServerRegisterCenter register){
 		this.register = register;
-		init(port);
+		bind(port);
 	}
 	
 	public RpcServer(ServerRegisterCenter register){
 		this(1334, register);
 	}
 	
-	public void init(int port){
-		ServerSocket server = null;
+	private void bind(int port){
+		log.info("开始启动服务，端口号：" + port);
+		EventLoopGroup bossGroup = new NioEventLoopGroup();
+		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		try {
-			server = new ServerSocket(port);
-			while(true){
-				Socket socket = server.accept();
-				InputStream input = socket.getInputStream();
-				OutputStream output = socket.getOutputStream();
-				//解析请求
-				Request request = ProtocolDispatcher.parseJavaSerializableProtocol(input);
-				//获取注册的service
-				RegisterBean bean = register.getRegisterBean(request.getUri());
-				Response response;
-				//处理请求
-				if(bean == null){
-					response = new Response();
-					response.setRequestId(request.getId());
-					response.setCode(Constant.INVOKE_CODE.NO_METHOD);
-					response.setException(new RuntimeException("no method regist for " + request.getUri()));
-				}else{
-					response = ServerInvoker.invoke(bean.getObj(), bean.getMethod(), request.getParams(), request.getId());
+			ServerBootstrap b = new ServerBootstrap();
+			b.group(bossGroup, workerGroup)
+			.channel(NioServerSocketChannel.class)
+			.option(ChannelOption.SO_BACKLOG, 100)
+			.handler(new LoggingHandler(LogLevel.INFO))
+			.childHandler(new ChannelInitializer<SocketChannel>() {
+				@Override
+				protected void initChannel(SocketChannel ch) throws Exception {
+					ch.pipeline().addLast(new ObjectDecoder(1024*1024, ClassResolvers.weakCachingConcurrentResolver(this.getClass().getClassLoader())));
+					ch.pipeline().addLast(new ObjectEncoder());
+					ch.pipeline().addLast(new RpcServerHandler(register));
 				}
-				//响应请求
-				ObjectOutputStream oos = new ObjectOutputStream(output);
-				oos.writeObject(response);
-				oos.flush();
-			}
+			});
+			ChannelFuture f = b.bind(port).sync();
+			f.channel().closeFuture().sync();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally{
-			if(server != null){
-				try {
-					server.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+			bossGroup.shutdownGracefully();
+			workerGroup.shutdownGracefully();
 		}
 	}
 }

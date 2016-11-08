@@ -5,6 +5,9 @@ import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.louch2010.rongine.util.MethodUtil;
 
 /**
@@ -16,6 +19,7 @@ import com.louch2010.rongine.util.MethodUtil;
  */
 public class ServerRegisterCenter {
 	private Map<String, RegisterBean> register = new ConcurrentHashMap<String, RegisterBean>();
+	private Log log = LogFactory.getLog(ServerRegisterCenter.class);
 
 	public RegisterBean getRegisterBean(String uri) {
 		return register.get(uri);
@@ -48,7 +52,7 @@ public class ServerRegisterCenter {
 			bean.setMethod(m);
 			bean.setObj(obj);
 			register.put(uri, bean);
-			System.out.println("注册：" + uri);
+			log.debug("注册请求url：" + uri);
 		}
 	}
 }
