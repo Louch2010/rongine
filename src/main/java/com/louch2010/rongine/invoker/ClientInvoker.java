@@ -14,23 +14,57 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 
 import java.util.UUID;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.louch2010.rongine.client.RpcClientHandler;
+import com.louch2010.rongine.config.ClientConfig;
 import com.louch2010.rongine.constants.Constant;
 import com.louch2010.rongine.protocol.Request;
 import com.louch2010.rongine.protocol.Response;
 
 public class ClientInvoker {
 	
-	public static Object invoke(Class<?> clazz, String methodSign, Object[] params) throws Exception{
+	private static Log log = LogFactory.getLog(ClientInvoker.class);
+	
+	private RpcClientHandler handler; 
+	private EventLoopGroup group;
+	private ChannelFuture future;
+	private ClientConfig config;
+	
+	public ClientInvoker(ClientConfig config){
+		this.handler = new RpcClientHandler();
+		this.config = config;
+		init();
+	}
+	
+	public Object invoke(Class<?> clazz, String methodSign, Object[] params) throws Exception{
 		//封装请求对象
 		String uri = clazz.getName() + "." + methodSign;
-		final Request request = new Request();
+		Request request = new Request();
 		request.setParams(params);
 		request.setUri(uri);
 		request.setId(UUID.randomUUID().toString());
-		final Response response = new Response();
-		//发送
-		EventLoopGroup group = new NioEventLoopGroup();
+		Response response = handler.sendMessage(request, config);
+		//解析响应内容
+		if(Constant.INVOKE_CODE.SUCCESS.equals(response.getCode())){
+			return response.getReturnValue();
+		}
+		if(response.getException() != null){
+			throw new Exception(response.getException());
+		}
+		return null;
+	}
+	
+	/**
+	  *description : 初始化服务，启动与server的连接
+	  *@param      : 
+	  *@return     : void
+	  *modified    : 1、2016年11月9日 下午3:06:15 由 luocihang 创建 	   
+	  */ 
+	private void init(){
+		log.info("初始化服务，启动与server的连接...");
+		this.group = new NioEventLoopGroup();
 		try {
 			Bootstrap b = new Bootstrap();
 			b.group(group)
@@ -41,24 +75,34 @@ public class ClientInvoker {
 				protected void initChannel(SocketChannel ch) throws Exception {
 					ch.pipeline().addLast(new ObjectDecoder(1024, ClassResolvers.cacheDisabled(this.getClass().getClassLoader())));
 					ch.pipeline().addLast(new ObjectEncoder());
-					ch.pipeline().addLast(new RpcClientHandler(request, response));
+					ch.pipeline().addLast(handler);
 				}
 			});
-			ChannelFuture f = b.connect("127.0.0.1", 1334).sync();
-			f.await();
-			//f.channel().closeFuture().sync();
+			this.future = b.connect(config.getServerIp(), config.getServerPort()).sync();
 		} catch (Exception e) {
-			e.printStackTrace();
-		} finally{
+			log.error("初始化服务失败！", e);
+			stop();
+			throw new RuntimeException("初始化服务失败！", e);
+		}
+		log.info("初始化服务完成！");
+	}
+	
+	/**
+	  *description : 停止服务，断开与server的连接
+	  *@param      : 
+	  *@return     : void
+	  *modified    : 1、2016年11月9日 下午3:05:57 由 luocihang 创建 	   
+	  */ 
+	public void stop(){
+		log.info("停止服务，断开与server的连接...");
+		try {
+			handler.closeChannel();
+			//future.channel().closeFuture().sync();
 			group.shutdownGracefully();
+		} catch (Exception e) {
+			log.error(e);
+		} finally{			
+			log.info("服务停止完成！");
 		}
-		//解析响应内容
-		if(Constant.INVOKE_CODE.SUCCESS.equals(response.getCode())){
-			return response.getReturnValue();
-		}
-		if(response.getException() != null){
-			throw new Exception(response.getException());
-		}
-		return null;
 	}
 }

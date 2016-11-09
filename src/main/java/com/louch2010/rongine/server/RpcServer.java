@@ -3,6 +3,7 @@ package com.louch2010.rongine.server;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.louch2010.rongine.config.ServerConfig;
 import com.louch2010.rongine.register.ServerRegisterCenter;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -23,18 +24,16 @@ import io.netty.handler.logging.LoggingHandler;
 public class RpcServer {
 	private Log log = LogFactory.getLog(RpcServer.class);
 	private ServerRegisterCenter register;
+	private ServerConfig config;
 	
-	public RpcServer(int port, ServerRegisterCenter register){
+	public RpcServer(ServerConfig config, ServerRegisterCenter register){
+		this.config = config;
 		this.register = register;
-		bind(port);
+		bind();
 	}
 	
-	public RpcServer(ServerRegisterCenter register){
-		this(1334, register);
-	}
-	
-	private void bind(int port){
-		log.info("开始启动服务，端口号：" + port);
+	private void bind(){
+		log.info("开始启动服务，端口号：" + config.getPort());
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		try {
@@ -51,7 +50,7 @@ public class RpcServer {
 					ch.pipeline().addLast(new RpcServerHandler(register));
 				}
 			});
-			ChannelFuture f = b.bind(port).sync();
+			ChannelFuture f = b.bind(config.getPort()).sync();
 			f.channel().closeFuture().sync();
 		} catch (Exception e) {
 			e.printStackTrace();
