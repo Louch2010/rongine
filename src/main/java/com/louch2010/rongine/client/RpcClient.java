@@ -10,15 +10,13 @@ import com.louch2010.rongine.util.MethodUtil;
 
 public class RpcClient implements InvocationHandler{
 	
-	private Class<?> clazz;
 	private ClientInvoker clientInvoker;
 	
 	public RpcClient(ClientConfig config){
 		this.clientInvoker = new ClientInvoker(config);
 	}
     
-    public <T>T create(Class<?> clazz){
-    	this.clazz = clazz;
+    public <T> T create(Class<T> clazz){
     	return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, this);
     }
     
@@ -45,14 +43,8 @@ public class RpcClient implements InvocationHandler{
 	  */ 
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		String methodSign = MethodUtil.getMethodSign(method);
-		//如果是接口中的方法，则使用动态代理，否则直接调用
-		Method[] methods = clazz.getMethods();
-		for(Method m: methods){
-			if(methodSign.equals(MethodUtil.getMethodSign(m))){
-				return clientInvoker.invoke(clazz, methodSign, args);
-			}
-		}
-		throw new NoSuchMethodError(clazz.getName() + "." + methodSign);
+		Class<?> clazz = method.getDeclaringClass();
+		return clientInvoker.invoke(clazz, methodSign, args);
 	}
 	
 }

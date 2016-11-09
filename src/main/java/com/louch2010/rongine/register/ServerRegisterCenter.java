@@ -24,19 +24,16 @@ public class ServerRegisterCenter {
 	public RegisterBean getRegisterBean(String uri) {
 		return register.get(uri);
 	}
-
-	public void register(Object obj) {
-		Class<?> clazz = obj.getClass();
-		doRegister(obj, clazz, clazz.getInterfaces()[0]);
+	
+	public void register(Object obj){
+		register(obj, obj.getClass());
 	}
 	
-	private void doRegister(Object obj, Class<?> clazz, Class<?> name){
+	public void register(Object obj, Class<?> clazz){
 		//如果有父接口，则循环遍历
 		Class<?>[] interfaces = clazz.getInterfaces();
-		if(interfaces != null && interfaces.length > 0){
-			for(Class<?> c:interfaces){					
-				doRegister(obj, c, name);
-			}
+		for(Class<?> c:interfaces){
+			register(obj, c);
 		}
 		//非接口的clazz忽略
 		if(!Modifier.isInterface(clazz.getModifiers())){
@@ -45,14 +42,14 @@ public class ServerRegisterCenter {
 		Method[] methods = clazz.getDeclaredMethods();
 		for (Method m : methods) {
 			// 获取方法的唯一签名
-			String uri = name.getName() + "." + MethodUtil.getMethodSign(m);
+			String uri = clazz.getName() + "." + MethodUtil.getMethodSign(m);
 			// 注册
 			RegisterBean bean = new RegisterBean();
 			bean.setUri(uri);
 			bean.setMethod(m);
 			bean.setObj(obj);
 			register.put(uri, bean);
-			log.debug("注册请求url：" + uri);
+			log.info("注册请求url：" + uri);
 		}
 	}
 }
