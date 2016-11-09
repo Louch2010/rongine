@@ -2,6 +2,7 @@ package com.louch2010.rongine.invoker;
 
 import java.util.concurrent.TimeoutException;
 
+import com.louch2010.rongine.constants.Constant;
 import com.louch2010.rongine.protocol.Response;
 
 /** 
@@ -49,7 +50,7 @@ public class ClientInvokerCallback {
 	            wait(timeout);
 	        }
 			if(response == null){
-				interrupt(new TimeoutException("获取响应结果失败！正时时间：" + timeout));
+				this.interrupt(Constant.INVOKE_CODE.INVOKER_TIMEOUT, new TimeoutException("获取响应结果失败！正时时间：" + timeout));
 			}
 		}
 		return response;
@@ -77,7 +78,19 @@ public class ClientInvokerCallback {
 	  *modified    : 1、2016年11月9日 下午4:03:42 由 luocihang 创建 	   
 	  */ 
 	public void interrupt(Throwable e){
+		this.interrupt(Constant.INVOKE_CODE.INVOKER_ERROR, e);
+	}
+	
+	/**
+	  *description : 中断响应
+	  *@param      : @param code
+	  *@param      : @param e
+	  *@return     : void
+	  *modified    : 1、2016年11月9日 下午4:54:59 由 luocihang 创建 	   
+	  */ 
+	public void interrupt(String code, Throwable e){
 		Response response = new Response();
+		response.setCode(code);
 		response.setException(e);
 		this.setResponse(response);
 	}

@@ -10,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.louch2010.rongine.config.ClientConfig;
+import com.louch2010.rongine.constants.Constant;
 import com.louch2010.rongine.invoker.ClientInvokerCallback;
 import com.louch2010.rongine.protocol.Request;
 import com.louch2010.rongine.protocol.Response;
@@ -51,7 +52,7 @@ public class RpcClientHandler extends ChannelInboundHandlerAdapter{
 	public void closeChannel(){
 		//对于正在发送的请求进行关闭
 		for (String id : callBackPool.keySet()) {
-			callBackPool.get(id).interrupt(new RuntimeException("连接已关闭，无法发送请求！"));
+			callBackPool.get(id).interrupt(Constant.INVOKE_CODE.CONNECT_CLOSE, new RuntimeException("连接已关闭，无法发送请求！"));
 		}
 		channelHandlerContext = null;
 	}
