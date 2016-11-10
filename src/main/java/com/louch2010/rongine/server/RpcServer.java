@@ -33,7 +33,7 @@ public class RpcServer {
 	}
 	
 	private void bind(){
-		log.info("开始启动服务，端口号：" + config.getPort());
+		log.info("开始启动服务，端口号：" + config.getProtocol().getPort());
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		try {
@@ -50,7 +50,7 @@ public class RpcServer {
 					ch.pipeline().addLast(new RpcServerHandler(register));
 				}
 			});
-			ChannelFuture f = b.bind(config.getPort()).sync();
+			ChannelFuture f = b.bind(config.getProtocol().getPort()).sync();
 			f.channel().closeFuture().sync();
 		} catch (Exception e) {
 			e.printStackTrace();

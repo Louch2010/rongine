@@ -1,14 +1,17 @@
 package com.louch2010.rongine.config;
 
-public class ServerConfig extends Config{
-	private int port;
+import java.util.HashMap;
+import java.util.Map;
 
-	public int getPort() {
-		return port;
+public class ServerConfig extends Config{
+	private Map<String, ServiceConfig> services = new HashMap<String, ServiceConfig>();
+
+	public Map<String, ServiceConfig> getServices() {
+		return services;
 	}
 
-	public void setPort(int port) {
-		this.port = port;
+	public void setServices(Map<String, ServiceConfig> services) {
+		this.services = services;
 	}
 	
 }

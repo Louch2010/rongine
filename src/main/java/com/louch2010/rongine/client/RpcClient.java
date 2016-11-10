@@ -24,7 +24,7 @@ public class RpcClient implements InvocationHandler{
       *description : 停止客户端
       *@param      : 
       *@return     : void
-      *modified    : 1、2016年11月9日 下午3:46:50 由 luocihang 创建 	   
+      *modified    : 1、2016年11月9日  由 luocihang 创建 	   
       */ 
     public void stop(){
     	clientInvoker.stop();
@@ -38,7 +38,7 @@ public class RpcClient implements InvocationHandler{
 	  *@param      : @return
 	  *@param      : @throws Throwable
 	  *@see        : 
-	  *modified    : 1、2016年11月7日 下午5:51:00 由 luocihang 创建 
+	  *modified    : 1、2016年11月7日  由 luocihang 创建 
 	  *			   
 	  */ 
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

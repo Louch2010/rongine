@@ -8,7 +8,7 @@ public class MethodUtil {
 	  *@param      : @param m
 	  *@param      : @return
 	  *@return     : String
-	  *modified    : 1、2016年11月7日 下午3:12:14 由 luocihang 创建 	   
+	  *modified    : 1、2016年11月7日 由 luocihang 创建 	   
 	  */ 
 	public static String getMethodSign(Method m){
 		StringBuffer uri = new StringBuffer(m.getName() + "(");

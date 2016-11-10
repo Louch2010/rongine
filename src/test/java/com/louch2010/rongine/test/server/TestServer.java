@@ -1,5 +1,6 @@
 package com.louch2010.rongine.test.server;
 
+import com.louch2010.rongine.config.ProtocolConfig;
 import com.louch2010.rongine.config.ServerConfig;
 import com.louch2010.rongine.register.ServerRegisterCenter;
 import com.louch2010.rongine.server.RpcServer;
@@ -18,7 +19,9 @@ public class TestServer {
 		register.register(worker);
 		//服务端配置
 		ServerConfig config = new ServerConfig();
-		config.setPort(1334);
+		ProtocolConfig protocolConfig = new ProtocolConfig();
+		protocolConfig.setPort(1334);
+		config.setProtocol(protocolConfig);
 		new RpcServer(config, register);
 	}
 }

@@ -26,7 +26,7 @@ public class RpcClientHandler extends ChannelInboundHandlerAdapter{
 	  *@param      : @return
 	  *@param      : @throws InterruptedException
 	  *@return     : Response
-	  *modified    : 1、2016年11月9日 下午3:18:24 由 luocihang 创建 	   
+	  *modified    : 1、2016年11月9日 由 luocihang 创建 	   
 	  */ 
 	public Response sendMessage(Request request, ClientConfig config) throws InterruptedException{
 		log.info("发送请求，请求内容为：" + request);
@@ -47,14 +47,15 @@ public class RpcClientHandler extends ChannelInboundHandlerAdapter{
 	  *description : 关闭channel
 	  *@param      : 
 	  *@return     : void
-	  *modified    : 1、2016年11月9日 下午4:04:13 由 luocihang 创建 	   
+	  *modified    : 1、2016年11月9日 由 luocihang 创建 	   
 	  */ 
 	public void closeChannel(){
+		channelHandlerContext = null;
 		//对于正在发送的请求进行关闭
 		for (String id : callBackPool.keySet()) {
 			callBackPool.get(id).interrupt(Constant.INVOKE_CODE.CONNECT_CLOSE, new RuntimeException("连接已关闭，无法发送请求！"));
 		}
-		channelHandlerContext = null;
+		callBackPool.clear();
 	}
 	
 	@Override

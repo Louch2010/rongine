@@ -1,20 +1,33 @@
 package com.louch2010.rongine.config;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class Config {
-	private Map<String, Long> timeoutMap = new HashMap<String, Long>();
+	// 应用信息
+	private ApplicationConfig application;
+	// 服务协议
+	private ProtocolConfig protocol;
+	// 全局超时设置
 	private long globalTimeout;
+	// 分布式注册中心
+	private List<DistributedRegisterConfig> distributedRegisters;
 
-	public Map<String, Long> getTimeoutMap() {
-		return timeoutMap;
+	public ApplicationConfig getApplication() {
+		return application;
 	}
 
-	public void setTimeoutMap(Map<String, Long> timeoutMap) {
-		this.timeoutMap = timeoutMap;
+	public void setApplication(ApplicationConfig application) {
+		this.application = application;
 	}
-	
+
+	public ProtocolConfig getProtocol() {
+		return protocol;
+	}
+
+	public void setProtocol(ProtocolConfig protocol) {
+		this.protocol = protocol;
+	}
+
 	public long getGlobalTimeout() {
 		return globalTimeout;
 	}
@@ -23,12 +36,13 @@ public class Config {
 		this.globalTimeout = globalTimeout;
 	}
 
-	public void setTimeout(String methodName, long timeout){
-		timeoutMap.put(methodName, timeout);
+	public List<DistributedRegisterConfig> getDistributedRegisters() {
+		return distributedRegisters;
 	}
-	
-	public long getTimeout(String methodName){
-		Long timeout = timeoutMap.get(methodName);
-		return timeout == null ? globalTimeout : timeout;
+
+	public void setDistributedRegisters(
+			List<DistributedRegisterConfig> distributedRegisters) {
+		this.distributedRegisters = distributedRegisters;
 	}
+
 }

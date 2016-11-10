@@ -40,7 +40,7 @@ public class ClientInvoker {
 	
 	public Object invoke(Class<?> clazz, String methodSign, Object[] params) throws Exception{
 		//封装请求对象
-		String uri = clazz.getName() + "." + methodSign;
+		String uri = clazz.getName() + Constant.METHOD_SPLID_CHAR + methodSign;
 		Request request = new Request();
 		request.setParams(params);
 		request.setUri(uri);
@@ -60,7 +60,7 @@ public class ClientInvoker {
 	  *description : 初始化服务，启动与server的连接
 	  *@param      : 
 	  *@return     : void
-	  *modified    : 1、2016年11月9日 下午3:06:15 由 luocihang 创建 	   
+	  *modified    : 1、2016年11月9日  由 luocihang 创建 	   
 	  */ 
 	private void init(){
 		log.info("初始化服务，启动与server的连接...");

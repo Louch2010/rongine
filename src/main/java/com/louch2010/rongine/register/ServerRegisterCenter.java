@@ -8,12 +8,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.louch2010.rongine.constants.Constant;
 import com.louch2010.rongine.util.MethodUtil;
 
 /**
  * @Description: 注册中心
  * @author: luocihang
- * @date: 2016年11月7日 下午3:00:10
+ * @date: 2016年11月7日
  * @version: V1.0
  * @see：
  */
@@ -42,7 +43,7 @@ public class ServerRegisterCenter {
 		Method[] methods = clazz.getDeclaredMethods();
 		for (Method m : methods) {
 			// 获取方法的唯一签名
-			String uri = clazz.getName() + "." + MethodUtil.getMethodSign(m);
+			String uri = clazz.getName() + Constant.METHOD_SPLID_CHAR + MethodUtil.getMethodSign(m);
 			// 注册
 			RegisterBean bean = new RegisterBean();
 			bean.setUri(uri);

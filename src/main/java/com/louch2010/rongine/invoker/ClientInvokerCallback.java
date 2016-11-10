@@ -8,7 +8,7 @@ import com.louch2010.rongine.protocol.Response;
 /** 
   * @Description: 回调
   * @author: luocihang
-  * @date: 2016年11月9日 下午3:07:44
+  * @date: 2016年11月9日
   * @version: V1.0 
   * @see：
   */
@@ -19,7 +19,7 @@ public class ClientInvokerCallback {
 	  *@param      : @return
 	  *@param      : @throws InterruptedException
 	  *@return     : Response
-	  *modified    : 1、2016年11月9日 下午3:07:58 由 luocihang 创建 	   
+	  *modified    : 1、2016年11月9日  由 luocihang 创建 	   
 	  */ 
 	public Response getResponse() throws InterruptedException{
 		synchronized (this) {
@@ -37,7 +37,7 @@ public class ClientInvokerCallback {
 	  *@param      : @return
 	  *@param      : @throws InterruptedException
 	  *@return     : Response
-	  *modified    : 1、2016年11月9日 下午4:44:23 由 luocihang 创建 	   
+	  *modified    : 1、2016年11月9日  由 luocihang 创建 	   
 	  */ 
 	public Response getResponse(long timeout) throws InterruptedException{
 		//超时时间未设置
@@ -60,7 +60,7 @@ public class ClientInvokerCallback {
 	  *description : 设置响应信息，唤醒处于等待的线程
 	  *@param      : @param response
 	  *@return     : void
-	  *modified    : 1、2016年11月9日 下午3:09:25 由 luocihang 创建 	   
+	  *modified    : 1、2016年11月9日  由 luocihang 创建 	   
 	  */ 
 	public void setResponse(Response response) {
         this.response = response;
@@ -75,7 +75,7 @@ public class ClientInvokerCallback {
 	  *description : 中断响应
 	  *@param      : 
 	  *@return     : void
-	  *modified    : 1、2016年11月9日 下午4:03:42 由 luocihang 创建 	   
+	  *modified    : 1、2016年11月9日 由 luocihang 创建 	   
 	  */ 
 	public void interrupt(Throwable e){
 		this.interrupt(Constant.INVOKE_CODE.INVOKER_ERROR, e);
@@ -86,7 +86,7 @@ public class ClientInvokerCallback {
 	  *@param      : @param code
 	  *@param      : @param e
 	  *@return     : void
-	  *modified    : 1、2016年11月9日 下午4:54:59 由 luocihang 创建 	   
+	  *modified    : 1、2016年11月9日 由 luocihang 创建 	   
 	  */ 
 	public void interrupt(String code, Throwable e){
 		Response response = new Response();
