@@ -12,6 +12,8 @@ public class BaseBeanConfig {
 	private String version;
 	//超时时间
 	private Long timeout;
+	//重试次数
+	private int retries;
 	//方法集合
 	private Map<String, MethodConfig> methods= new HashMap<String, MethodConfig>();
 
@@ -54,4 +56,13 @@ public class BaseBeanConfig {
 	public void setMethods(Map<String, MethodConfig> methods) {
 		this.methods = methods;
 	}
+
+	public int getRetries() {
+		return retries;
+	}
+
+	public void setRetries(int retries) {
+		this.retries = retries;
+	}
+	
 }

@@ -10,7 +10,7 @@ public class Config {
 	// 全局超时设置
 	private long globalTimeout;
 	// 分布式注册中心
-	private List<DistributedRegisterConfig> distributedRegisters;
+	private List<RegisterConfig> distributedRegisters;
 
 	public ApplicationConfig getApplication() {
 		return application;
@@ -36,12 +36,12 @@ public class Config {
 		this.globalTimeout = globalTimeout;
 	}
 
-	public List<DistributedRegisterConfig> getDistributedRegisters() {
+	public List<RegisterConfig> getDistributedRegisters() {
 		return distributedRegisters;
 	}
 
 	public void setDistributedRegisters(
-			List<DistributedRegisterConfig> distributedRegisters) {
+			List<RegisterConfig> distributedRegisters) {
 		this.distributedRegisters = distributedRegisters;
 	}
 

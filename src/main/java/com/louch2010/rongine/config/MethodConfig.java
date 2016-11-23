@@ -12,6 +12,8 @@ public class MethodConfig {
 	private String name;
 	// 超时时间
 	private Long timeout;
+	//重试次数
+	private int retries;
 
 	public String getName() {
 		return name;
@@ -27,6 +29,14 @@ public class MethodConfig {
 
 	public void setTimeout(Long timeout) {
 		this.timeout = timeout;
+	}
+
+	public int getRetries() {
+		return retries;
+	}
+
+	public void setRetries(int retries) {
+		this.retries = retries;
 	}
 
 }

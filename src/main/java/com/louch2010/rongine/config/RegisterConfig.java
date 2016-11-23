@@ -7,7 +7,7 @@ package com.louch2010.rongine.config;
   * @version: V1.0 
   * @see：
   */
-public class DistributedRegisterConfig {
+public class RegisterConfig {
 	private String protocol;
 	private String address;
 
