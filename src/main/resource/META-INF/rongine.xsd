@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/rongine/"
-	targetNamespace="http://www.example.org/rongine/">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.louch2010.com/schema/rongine"
+	targetNamespace="http://www.louch2010.com/schema/rongine">
 	<element name="application">
 		<annotation>
 			<documentation>应用信息配置</documentation>
@@ -22,7 +22,8 @@
 			<attribute name="name" use="required" type="string">
 				<annotation>
 					<documentation>协议名</documentation>
-				</annotation>
+				</annotation>
+
 			</attribute>
 			<attribute name="port" type="int" use="required">
 				<annotation>
@@ -50,91 +51,107 @@
 		</complexType>
 	</element>
 
-    <element name="service">
-        <annotation>
-        	<documentation>生产者声明</documentation>
-        </annotation>
-        <complexType>
-    		<sequence>
-    			<element name="method" type="tns:method">
-    				<annotation>
-    					<documentation>方法配置</documentation>
-    				</annotation></element>
-    		</sequence>
-    		<attribute name="id" type="string">
-    			<annotation>
-    				<documentation>ID</documentation>
-    			</annotation></attribute>
-    		<attribute name="interface" type="string">
-    			<annotation>
-    				<documentation>接口全路径</documentation>
-    			</annotation></attribute>
-    		<attribute name="ref" type="string">
-    			<annotation>
-    				<documentation>实现类引用</documentation>
-    			</annotation></attribute>
-    		<attribute name="version" type="string">
-    			<annotation>
-    				<documentation>版本号</documentation>
-    			</annotation></attribute>
-    		<attribute name="retries" type="int" use="optional" default="0">
-    			<annotation>
-    				<documentation>重试次数</documentation>
-    			</annotation></attribute>
-    		<attribute name="timeout" type="int" use="optional">
-    			<annotation>
-    				<documentation>超时时间，单位：毫秒</documentation>
-    			</annotation></attribute>
-    	</complexType>
-    </element>
-    
-    <element name="reference">
-        <annotation>
-        	<documentation>消费者声明</documentation>
-        </annotation>
-        <complexType>
-    		<sequence>
-    			<element name="method" type="tns:method">
-    				<annotation>
-    					<documentation>方法配置</documentation>
-    				</annotation></element>
-    		</sequence>
-    		<attribute name="id" type="string" use="optional">
-    			<annotation>
-    				<documentation>ID</documentation>
-    			</annotation></attribute>
-    		<attribute name="interface" type="string" use="required">
-    			<annotation>
-    				<documentation>接口全路径</documentation>
-    			</annotation></attribute>
-    		<attribute name="version" type="string" use="optional">
-    			<annotation>
-    				<documentation>版本号</documentation>
-    			</annotation></attribute>
-    		<attribute name="retries" type="int" use="optional" default="0">
-    			<annotation>
-    				<documentation>重试次数，默认为0</documentation>
-    			</annotation></attribute>
-    		<attribute name="timeout" type="int" use="optional">
-    			<annotation>
-    				<documentation>超时时间，单位：毫秒</documentation>
-    			</annotation></attribute>
-    	</complexType>
-    </element>
+	<element name="service">
+		<annotation>
+			<documentation>生产者声明</documentation>
+		</annotation>
+		<complexType>
+			<sequence>
+				<element ref="tns:method" minOccurs="0" maxOccurs="unbounded" />
+			</sequence>
+			<attribute name="id" type="string">
+				<annotation>
+					<documentation>ID</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="interface" type="string">
+				<annotation>
+					<documentation>接口全路径</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="ref" type="string">
+				<annotation>
+					<documentation>实现类引用</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="version" type="string">
+				<annotation>
+					<documentation>版本号</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="retries" type="int" use="optional"
+				default="0">
+				<annotation>
+					<documentation>重试次数</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="timeout" type="int" use="optional">
+				<annotation>
+					<documentation>超时时间，单位：毫秒</documentation>
+				</annotation>
+			</attribute>
+		</complexType>
+	</element>
 
-    <complexType name="method">
-    	<attribute name="name" type="string" use="required">
-    		<annotation>
-    			<documentation>方法签名</documentation>
-    		</annotation></attribute>
-    	<attribute name="retries" type="int" use="optional" default="0">
-    		<annotation>
-    			<documentation>重试次数，默认为0</documentation>
-    		</annotation></attribute>
-    	<attribute name="timeout" type="int" use="optional">
-    		<annotation>
-    			<documentation>超时时间，单位：毫秒</documentation>
-    		</annotation>
-    	</attribute>
-    </complexType>
+	<element name="reference">
+		<annotation>
+			<documentation>消费者声明</documentation>
+		</annotation>
+		<complexType>
+			<sequence>
+				<element ref="tns:method" minOccurs="0" maxOccurs="unbounded" />
+			</sequence>
+			<attribute name="id" type="string" use="optional">
+				<annotation>
+					<documentation>ID</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="interface" type="string" use="required">
+				<annotation>
+					<documentation>接口全路径</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="version" type="string" use="optional">
+				<annotation>
+					<documentation>版本号</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="retries" type="int" use="optional"
+				default="0">
+				<annotation>
+					<documentation>重试次数，默认为0</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="timeout" type="int" use="optional">
+				<annotation>
+					<documentation>超时时间，单位：毫秒</documentation>
+				</annotation>
+			</attribute>
+		</complexType>
+	</element>
+
+
+    <element name="method">
+    	<annotation>
+			<documentation>方法配置</documentation>
+		</annotation>
+    	<complexType>
+    		<attribute name="name" type="string" use="required">
+				<annotation>
+					<documentation>方法签名</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="retries" type="int" use="optional"
+				default="0">
+				<annotation>
+					<documentation>重试次数，默认为0</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="timeout" type="int" use="optional">
+				<annotation>
+					<documentation>超时时间，单位：毫秒</documentation>
+				</annotation>
+			</attribute>
+    	</complexType>
+    </element>
 </schema>
