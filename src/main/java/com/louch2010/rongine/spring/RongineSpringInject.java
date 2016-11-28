@@ -35,7 +35,11 @@ public class RongineSpringInject implements ApplicationContextAware{
 		config.setRegisters(registers);
 		//注册服务
 		ServerRegisterCenter center = new ServerRegisterCenter();
-		center.register(context, registers, services);
+		try {
+			center.register(context, config);
+		} catch (Exception e) {
+			throw new BeansException("注册服务出错！", e) {};
+		}
 		//启动服务
 		new RpcServer(config, center);
 	}

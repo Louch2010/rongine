@@ -10,8 +10,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 
 import com.louch2010.rongine.config.RegisterConfig;
+import com.louch2010.rongine.config.ServerConfig;
 import com.louch2010.rongine.config.ServiceConfig;
 import com.louch2010.rongine.constants.Constant;
+import com.louch2010.rongine.register.zk.RongineServerZkHandler;
 import com.louch2010.rongine.util.MethodUtil;
 
 /**
@@ -24,6 +26,7 @@ import com.louch2010.rongine.util.MethodUtil;
 public class ServerRegisterCenter {
 	private Map<String, RegisterBean> register = new ConcurrentHashMap<String, RegisterBean>();
 	private Log log = LogFactory.getLog(ServerRegisterCenter.class);
+	private ServerConfig config;
 
 	public RegisterBean getRegisterBean(String uri) {
 		return register.get(uri);
@@ -52,6 +55,9 @@ public class ServerRegisterCenter {
 			bean.setUri(uri);
 			bean.setMethod(m);
 			bean.setObj(obj);
+			if(config != null){
+				bean.setProtocolConfig(config.getProtocol());
+			}
 			register.put(uri, bean);
 			log.info("注册请求url：" + uri);
 		}
@@ -64,8 +70,12 @@ public class ServerRegisterCenter {
 	  *@param      : @param services
 	  *@return     : void
 	  *modified    : 1、2016年11月28日 由 luocihang 创建 	   
+	 * @throws Exception 
 	  */ 
-	public void register(ApplicationContext context, Map<String, RegisterConfig> registers, Map<String, ServiceConfig> services){
+	public void register(ApplicationContext context, ServerConfig config) throws Exception{
+		this.config = config;
+		Map<String, ServiceConfig> services = config.getServices();
+		Map<String, RegisterConfig> registers = config.getRegisters();
 		//先在本机进行注册
 		for(String id : services.keySet()){
 			ServiceConfig service = services.get(id);
@@ -74,12 +84,12 @@ public class ServerRegisterCenter {
 		}
 		//向注册中心进行注册
 		for(String key : registers.keySet()){
-			RegisterConfig register = registers.get(key);
-			String address = register.getAddress();
-			String protocol = register.getProtocol();
+			RegisterConfig reg = registers.get(key);
+			String address = reg.getAddress();
+			String protocol = reg.getProtocol();
 			//ZK注册中心
 			if(Constant.REGISTRY_PROTOCOL.ZOOKEEPER.equalsIgnoreCase(protocol)){
-				
+				RongineServerZkHandler.handle(address, register);
 			}else if(Constant.REGISTRY_PROTOCOL.RONGINE.equalsIgnoreCase(protocol)){
 				//RONGINE注册中心不做处理
 			}

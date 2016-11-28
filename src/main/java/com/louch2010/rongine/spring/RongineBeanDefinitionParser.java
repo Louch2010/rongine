@@ -18,6 +18,7 @@ import com.louch2010.rongine.config.ProtocolConfig;
 import com.louch2010.rongine.config.ReferenceConfig;
 import com.louch2010.rongine.config.RegisterConfig;
 import com.louch2010.rongine.config.ServiceConfig;
+import com.louch2010.rongine.util.IpUtil;
 
 public class RongineBeanDefinitionParser implements BeanDefinitionParser {
 
@@ -49,6 +50,12 @@ public class RongineBeanDefinitionParser implements BeanDefinitionParser {
 		} else if (ProtocolConfig.class.equals(beanClass)) {
 			property.add("name", element.getAttribute("name"));
 			property.add("port", element.getAttribute("port"));
+			String host = element.getAttribute("host");
+			if(StringUtils.isEmpty(host)){
+				property.add("host", IpUtil.getLocalIp());
+			}else{				
+				property.add("host", host);
+			}
 		} else if (RegisterConfig.class.equals(beanClass)) {
 			property.add("protocol", element.getAttribute("protocol"));
 			property.add("address", element.getAttribute("address"));

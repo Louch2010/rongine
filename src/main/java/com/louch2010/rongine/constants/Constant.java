@@ -29,4 +29,20 @@ public interface Constant {
 		String ZOOKEEPER = "zookeeper";
 		String RONGINE = "rongine";
 	}
+	
+	/** 
+	  * @Description: zk信息
+	  * @author: luocihang
+	  * @date: 2016年11月28日
+	  * @version: V1.0 
+	  * @see：
+	  */
+	public interface ZOOKEEPER_INFO{
+		String BASE_NODE = "/rongine";
+		String BASE_NODE_INFO = "rongine base node";
+		String PROVIDERS_NODE = "/provider";
+		String PROVIDERS_NODE_INFO = "rongine provider info";
+		String CONSUMERS_NODE = "/consumer";
+		String CONSUMERS_NODE_INFO = "rongine consumer info";
+	}
 }
