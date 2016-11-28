@@ -33,6 +33,7 @@ public class RongineSpringInject implements ApplicationContextAware{
 		config.setApplication(application);
 		config.setProtocol(protocol);
 		config.setRegisters(registers);
+		config.setServices(services);
 		//注册服务
 		ServerRegisterCenter center = new ServerRegisterCenter();
 		try {
