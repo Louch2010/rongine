@@ -10,6 +10,5 @@ public class TestSpring {
 		ApplicationContext application = new ClassPathXmlApplicationContext("spring.xml");
 		WorkerService worker = (WorkerService) application.getBean("workerService");
 		System.out.println(worker.doWork("tom"));
-		System.out.println(application.getBeanDefinitionNames().length);
 	}
 }

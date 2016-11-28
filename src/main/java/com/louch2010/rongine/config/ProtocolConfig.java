@@ -8,6 +8,7 @@ package com.louch2010.rongine.config;
  * @see：
  */
 public class ProtocolConfig {
+	private String id;
 	//主机IP
 	private String host;
 	//端口号
@@ -39,4 +40,12 @@ public class ProtocolConfig {
 		this.name = name;
 	}
 
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 }

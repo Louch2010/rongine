@@ -1,6 +1,7 @@
 package com.louch2010.rongine.config;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Config {
 	// 应用信息
@@ -10,7 +11,7 @@ public class Config {
 	// 全局超时设置
 	private long globalTimeout;
 	// 分布式注册中心
-	private List<RegisterConfig> distributedRegisters;
+	private Map<String, RegisterConfig> registers = new HashMap<String, RegisterConfig>();
 
 	public ApplicationConfig getApplication() {
 		return application;
@@ -36,13 +37,11 @@ public class Config {
 		this.globalTimeout = globalTimeout;
 	}
 
-	public List<RegisterConfig> getDistributedRegisters() {
-		return distributedRegisters;
+	public Map<String, RegisterConfig> getRegisters() {
+		return registers;
 	}
 
-	public void setDistributedRegisters(
-			List<RegisterConfig> distributedRegisters) {
-		this.distributedRegisters = distributedRegisters;
+	public void setRegisters(Map<String, RegisterConfig> registers) {
+		this.registers = registers;
 	}
-
 }

@@ -18,4 +18,15 @@ public interface Constant {
 		String CONNECT_CLOSE = "CONNECT_CLOSE";
 	}
 	
+	/** 
+	  * @Description: 注册中心协议
+	  * @author: luocihang
+	  * @date: 2016年11月28日
+	  * @version: V1.0 
+	  * @see：
+	  */
+	public interface REGISTRY_PROTOCOL{
+		String ZOOKEEPER = "zookeeper";
+		String RONGINE = "rongine";
+	}
 }

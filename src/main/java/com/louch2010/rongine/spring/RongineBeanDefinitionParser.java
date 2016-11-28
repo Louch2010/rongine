@@ -46,20 +46,21 @@ public class RongineBeanDefinitionParser implements BeanDefinitionParser {
 		// 针对不同的标签做相应的处理
 		if (ApplicationConfig.class.equals(beanClass)) {
 			property.add("name", element.getAttribute("name"));
-		} else if (ProtocolConfig.class.equals(beanDefinition)) {
+		} else if (ProtocolConfig.class.equals(beanClass)) {
 			property.add("name", element.getAttribute("name"));
 			property.add("port", element.getAttribute("port"));
-		} else if (RegisterConfig.class.equals(beanDefinition)) {
+		} else if (RegisterConfig.class.equals(beanClass)) {
 			property.add("protocol", element.getAttribute("protocol"));
 			property.add("address", element.getAttribute("address"));
-		} else if (ServiceConfig.class.equals(beanDefinition)) {
+		} else if (ServiceConfig.class.equals(beanClass)) {
 			property.add("ref", element.getAttribute("ref"));
 			this.setCommonProperties(property, element);
 			this.parseMethods(id, element.getChildNodes(), property, context);
-		} else if (ReferenceConfig.class.equals(beanDefinition)) {
+		} else if (ReferenceConfig.class.equals(beanClass)) {
 			this.setCommonProperties(property, element);
 			this.parseMethods(id, element.getChildNodes(), property, context);
 		}
+		context.getRegistry().registerBeanDefinition(id, beanDefinition);
 		return beanDefinition;
 	}
 
@@ -100,9 +101,9 @@ public class RongineBeanDefinitionParser implements BeanDefinitionParser {
 	 */
 	private void setCommonProperties(MutablePropertyValues property,
 			Element element) {
-		String inter = element.getAttribute("interface");
-		if (!StringUtils.isEmpty(inter)) {
-			property.add("interface", inter);
+		String interfaceName = element.getAttribute("interface");
+		if (!StringUtils.isEmpty(interfaceName)) {
+			property.add("interfaceName", interfaceName);
 		}
 		String version = element.getAttribute("version");
 		if (!StringUtils.isEmpty(version)) {

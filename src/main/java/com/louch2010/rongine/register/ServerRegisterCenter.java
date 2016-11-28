@@ -7,7 +7,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.context.ApplicationContext;
 
+import com.louch2010.rongine.config.RegisterConfig;
+import com.louch2010.rongine.config.ServiceConfig;
 import com.louch2010.rongine.constants.Constant;
 import com.louch2010.rongine.util.MethodUtil;
 
@@ -51,6 +54,35 @@ public class ServerRegisterCenter {
 			bean.setObj(obj);
 			register.put(uri, bean);
 			log.info("注册请求url：" + uri);
+		}
+	}
+	
+	/**
+	  *description : 向注册中心注册服务
+	  *@param      : @param context
+	  *@param      : @param registers
+	  *@param      : @param services
+	  *@return     : void
+	  *modified    : 1、2016年11月28日 由 luocihang 创建 	   
+	  */ 
+	public void register(ApplicationContext context, Map<String, RegisterConfig> registers, Map<String, ServiceConfig> services){
+		//先在本机进行注册
+		for(String id : services.keySet()){
+			ServiceConfig service = services.get(id);
+			Object bean = context.getBean(service.getRef());
+			this.register(bean);
+		}
+		//向注册中心进行注册
+		for(String key : registers.keySet()){
+			RegisterConfig register = registers.get(key);
+			String address = register.getAddress();
+			String protocol = register.getProtocol();
+			//ZK注册中心
+			if(Constant.REGISTRY_PROTOCOL.ZOOKEEPER.equalsIgnoreCase(protocol)){
+				
+			}else if(Constant.REGISTRY_PROTOCOL.RONGINE.equalsIgnoreCase(protocol)){
+				//RONGINE注册中心不做处理
+			}
 		}
 	}
 }

@@ -14,7 +14,7 @@ public class RongineNamespaceHandler extends NamespaceHandlerSupport{
 		 registerBeanDefinitionParser("application", new RongineBeanDefinitionParser(ApplicationConfig.class, true));
 		 registerBeanDefinitionParser("registry", new RongineBeanDefinitionParser(RegisterConfig.class, true));
 		 registerBeanDefinitionParser("protocol", new RongineBeanDefinitionParser(ProtocolConfig.class, true));
-		 registerBeanDefinitionParser("service", new RongineBeanDefinitionParser(ServiceConfig.class, false));
-	     registerBeanDefinitionParser("reference", new RongineBeanDefinitionParser(ReferenceConfig.class, false));
+		 registerBeanDefinitionParser("service", new RongineBeanDefinitionParser(ServiceConfig.class, true));
+	     registerBeanDefinitionParser("reference", new RongineBeanDefinitionParser(ReferenceConfig.class, true));
 	}
 }

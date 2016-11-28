@@ -8,6 +8,7 @@ package com.louch2010.rongine.config;
  * @see：
  */
 public class MethodConfig {
+	private String id;
 	// 方法名，即方法签名
 	private String name;
 	// 超时时间
@@ -39,4 +40,12 @@ public class MethodConfig {
 		this.retries = retries;
 	}
 
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 }

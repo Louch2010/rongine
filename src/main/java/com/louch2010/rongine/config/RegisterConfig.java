@@ -8,6 +8,7 @@ package com.louch2010.rongine.config;
   * @see：
   */
 public class RegisterConfig {
+	private String id;
 	private String protocol;
 	private String address;
 
@@ -27,4 +28,12 @@ public class RegisterConfig {
 		this.address = address;
 	}
 
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 }

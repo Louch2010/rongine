@@ -20,9 +20,9 @@ public class TestClient {
 			Worker worker = new Worker(i, service);
 			new Thread(worker).start();
 		}*/
-		//client.stop();
 		System.out.println("响应：" + service.talk("小明"));
 		System.out.println("响应：" + worker.doWork("小李"));
+		client.stop();
 	}
 	
 }

@@ -8,6 +8,7 @@ package com.louch2010.rongine.config;
   * @see：
   */
 public class ApplicationConfig {
+	private String Id;
 	//应用名
 	private String name;
 
@@ -17,5 +18,18 @@ public class ApplicationConfig {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getId() {
+		return Id;
+	}
+
+	public void setId(String id) {
+		Id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "ApplicationConfig [name=" + name + "]";
 	}
 }
