@@ -1,5 +1,6 @@
 package com.louch2010.rongine.register.zk;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -25,6 +26,8 @@ public class RongineServerZkHandler {
 		if(address.startsWith(protocol)){
 			address = address.substring(protocol.length());
 		}
+		//bean转换
+		Map<String, ZookeeperRegisterBean> serviceMap = getZookeeperRegisterBeanMap(beans);
 		//多个zk地址进行处理
 		String[] zks = address.split(";");
 		ZooKeeperOperator zkoperator;
@@ -45,8 +48,8 @@ public class RongineServerZkHandler {
 				zkoperator.createPersistentNode(Constant.ZOOKEEPER_INFO.BASE_NODE, Constant.ZOOKEEPER_INFO.BASE_NODE_INFO);
 			}
 			//注册服务
-			for(String key : beans.keySet()){
-				RegisterBean bean = beans.get(key);
+			for(String key : serviceMap.keySet()){
+				ZookeeperRegisterBean bean = serviceMap.get(key);
 				register(bean, zkoperator);
 			}
 		}
@@ -60,21 +63,14 @@ public class RongineServerZkHandler {
 	  *@return     : void
 	  *modified    : 1、2016年11月28日 由 luocihang 创建 	   
 	  */ 
-	private static void register(RegisterBean bean, ZooKeeperOperator zkoperator) throws Exception{
-		String uri = bean.getUri();
-		String[] methodInfo = uri.split(Constant.METHOD_SPLID_CHAR);
+	private static void register(ZookeeperRegisterBean bean, ZooKeeperOperator zkoperator) throws Exception{
 		//没有服务结点则创建
-		String serviceNode = Constant.ZOOKEEPER_INFO.BASE_NODE + "/" + methodInfo[0];
+		String serviceNode = Constant.ZOOKEEPER_INFO.BASE_NODE + "/" + bean.getUri();
 		if(!zkoperator.exists(serviceNode)){
 			zkoperator.createPersistentNode(serviceNode, "");
 		}
-		//创建方法结点
-		String method = serviceNode + "/" + methodInfo[1];
-		if(!zkoperator.exists(method)){
-			zkoperator.createPersistentNode(method, Constant.ZOOKEEPER_INFO.PROVIDERS_NODE_INFO);
-		}
 		//创建providers结点
-		String provider = method +  Constant.ZOOKEEPER_INFO.PROVIDERS_NODE;
+		String provider = serviceNode +  Constant.ZOOKEEPER_INFO.PROVIDERS_NODE;
 		if(!zkoperator.exists(provider)){
 			zkoperator.createPersistentNode(provider, Constant.ZOOKEEPER_INFO.PROVIDERS_NODE_INFO);
 		}
@@ -84,5 +80,30 @@ public class RongineServerZkHandler {
 		if(!zkoperator.exists(path)){
 			zkoperator.createEphemeralNode(path, "");//会话级别
 		}
+	}
+	
+	/**
+	  *description : bean转换
+	  *@param      : @param beans
+	  *@param      : @return
+	  *@return     : Map<String,ZookRegisterBean>
+	  *modified    : 1、2016年11月29日 由 luocihang 创建 	   
+	  */ 
+	private static Map<String, ZookeeperRegisterBean> getZookeeperRegisterBeanMap(Map<String, RegisterBean> beans){
+		Map<String, ZookeeperRegisterBean> map = new HashMap<String, ZookeeperRegisterBean>();
+		for(String uri:beans.keySet()){
+			RegisterBean bean = beans.get(uri);
+			//将uri进行拆分
+			String[] methodInfo = uri.split(Constant.METHOD_SPLID_CHAR);
+			String serviceName = methodInfo[0];
+			if(map.containsKey(serviceName)){
+				map.get(serviceName).addMethod(methodInfo[1], bean.getMethodConfig());
+			}else{
+				ZookeeperRegisterBean zook = new ZookeeperRegisterBean();
+				zook.setUri(serviceName);
+				zook.addMethod(methodInfo[1], bean.getMethodConfig());
+			}
+		}
+		return map;
 	}
 }
