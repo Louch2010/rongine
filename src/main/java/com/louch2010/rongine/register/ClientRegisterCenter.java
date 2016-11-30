@@ -8,6 +8,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 
 import com.louch2010.rongine.config.ClientConfig;
+import com.louch2010.rongine.config.ReferenceConfig;
+import com.louch2010.rongine.config.RegisterConfig;
 import com.louch2010.rongine.config.ServerConfig;
 
 public class ClientRegisterCenter {
@@ -20,6 +22,8 @@ public class ClientRegisterCenter {
 	}
 	
 	public void register(ApplicationContext context, ClientConfig config) throws Exception{
+		Map<String, RegisterConfig> registers = config.getRegisters();
+		Map<String, ReferenceConfig> references = config.getReferences();
 		
 	}
 }
