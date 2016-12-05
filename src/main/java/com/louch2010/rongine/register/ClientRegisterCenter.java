@@ -24,6 +24,9 @@ public class ClientRegisterCenter {
 	public void register(ApplicationContext context, ClientConfig config) throws Exception{
 		Map<String, RegisterConfig> registers = config.getRegisters();
 		Map<String, ReferenceConfig> references = config.getReferences();
-		
+		for(String key:references.keySet()){
+			ReferenceConfig reference = references.get(key);
+			
+		}
 	}
 }
