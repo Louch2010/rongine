@@ -3,7 +3,7 @@ package com.louch2010.rongine.spring;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
-import org.springframework.beans.factory.support.ManagedList;
+import org.springframework.beans.factory.support.ManagedMap;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -67,7 +67,8 @@ public class RongineBeanDefinitionParser implements BeanDefinitionParser {
 			this.setCommonProperties(property, element);
 			this.parseMethods(id, element.getChildNodes(), property, context);
 		}
-		context.getRegistry().registerBeanDefinition(id, beanDefinition);
+		//将配置进行注册
+		context.getRegistry().registerBeanDefinition(id + "_config", beanDefinition);
 		return beanDefinition;
 	}
 
@@ -139,7 +140,7 @@ public class RongineBeanDefinitionParser implements BeanDefinitionParser {
 		if(nodeList == null || nodeList.getLength() == 0){
 			return;
 		}
-		ManagedList<BeanDefinitionHolder> methods = null;
+		ManagedMap<String, BeanDefinitionHolder> methods = null;
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			Node node = nodeList.item(i);
 			if(!(node instanceof Element)){
@@ -152,12 +153,12 @@ public class RongineBeanDefinitionParser implements BeanDefinitionParser {
 					throw new IllegalStateException("<rongine:method> name attribute == null");
 				}
 				if (methods == null) {
-					methods = new ManagedList<BeanDefinitionHolder>();
+					methods = new ManagedMap<String, BeanDefinitionHolder>();
 				}
 				BeanDefinition methodBeanDefinition = this.parse(((Element) node), parserContext, MethodConfig.class, false);
 				String name = id + "." + methodName;
 				BeanDefinitionHolder methodBeanDefinitionHolder = new BeanDefinitionHolder(methodBeanDefinition, name);
-				methods.add(methodBeanDefinitionHolder);
+				methods.put(name, methodBeanDefinitionHolder);
 			}
 		}
 		if (methods != null) {
