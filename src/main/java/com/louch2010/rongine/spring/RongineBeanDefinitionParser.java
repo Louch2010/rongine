@@ -69,6 +69,13 @@ public class RongineBeanDefinitionParser implements BeanDefinitionParser {
 		}
 		//将配置进行注册
 		context.getRegistry().registerBeanDefinition(id + "_config", beanDefinition);
+		//将注入入口加入到spring容器中
+		if(beanClass == ApplicationConfig.class){
+			RootBeanDefinition injectDefinition = new RootBeanDefinition();
+			injectDefinition.setBeanClass(RongineSpringInject.class);
+			injectDefinition.setLazyInit(false);
+			context.getRegistry().registerBeanDefinition("rongineInjectDefinition", injectDefinition);
+		}
 		return beanDefinition;
 	}
 
